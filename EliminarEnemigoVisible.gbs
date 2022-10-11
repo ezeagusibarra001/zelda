@@ -1,24 +1,5 @@
 program{
-    EliminarEnemigoVisble()
-}
-
-procedure EliminarEnemigoVisble(){
-    /*
-    Proposito: Eliminar a un enemigo de link mientras el mismo se encuentre dentro del campo de 
-    vision de Link.
-    Precondicion: Debe existir un enemigo en una direccion y sin ningun obstaculo en el medio.
-    La distancia entre link y su enemigo debe ser mayor a 0
-    Parametros: -
-    Observaciones: Si el enemigo se encuentra a mas de 3 ubicaciones de distancia elimina al enemigo
-    con su arco, sino se mueve hasta donde el enemigo se encuentra y lo mata con su espada.
-    */
-    direccion := minDir()
-    if(distanciaEntreLinkYSuEnemigo() > 0){
-        while(direccion /= maxDir() && not hayEnemigosEnLaVisionDeLinkHacia_(direccion)){
-            direccion := siguiente(direccion)
-        }
-        EliminarEnemigoConArcoOConEspadaAl_(direccion)
-    }
+    EliminarEnemigoVisible()
 }
 
 procedure EliminarEnemigoVisible() {
@@ -27,69 +8,57 @@ procedure EliminarEnemigoVisible() {
     PRECONDICIÓN: el cabezal está sobre Link y hay un único enemigo visible.
     PARAMETROS: ninguno
     */
-    if (distanciaEntreLInkYSuEnemigo() >3) {
-        MataEnemigoHacia_ConArco(direcciónEnLaQueEstáEnemigo() )
+    if (distanciaEntreLinkYSuEnemigo() >3) {
+        MataEnemigoHacia_ConArco(direcciónEnLaQueEstáElEnemigo() )
     } else {
-        IrYMatarEnemigoHacia_ConEspada(direcciónEnLaQueEstáEnemigo() )
+        IrYMatarEnemigoHacia_ConEspada(direcciónEnLaQueEstáElEnemigo() )
     }
 }
+procedure MataEnemigoHacia_ConArco(direccion){
+    MatarEnemigoHacia_ConElArco(direccion)
+}
  
-procedure EliminarEnemigoConArcoOConEspadaAl_(direccion){
+procedure IrYMatarEnemigoHacia_ConEspada(direccion){
     /*
-    Proposito: Eliminar el enemigo de link al "direccion" con arco o con espada
-    Parametros: direccion: Direccion
+    Proposito: Eliminar el enemigo de link al "direccion" con la espada
     Precondicion: Debe existir un enemigo visible en la "direccion" dada
-    Observaciones: Si el enemigo se encuentra a mas de 3 ubicaciones de distancia
-    se lo elimina cona rco y sino con espada
+    Parametros: direccion: Direccion 
+    Observaciones: -
     */
-    distanciaAlEnemigo := distanciaEntreLinkYSuEnemigo()
-    if(distanciaAlEnemigo > 3){
-        MatarEnemigoHacia_ConElArco(direccion)
-        MoverLink_VecesAl_(distanciaAlEnemigo, opuesto(direccion))
-    }else{
-        MoverLink_VecesAl_(distanciaAlEnemigo - 1, direccion)
-        MatarEnemigoHacia_ConLaEspada(direccion)
-        MoverLink_VecesAl_(distanciaAlEnemigo - 1, opuesto(direccion))
-    } 
+    MoverLink_VecesAl_(distanciaEntreLinkYSuEnemigo() - 1, direccion)
+    MatarEnemigoHacia_ConLaEspada(direccion)    
 }
 
 function distanciaEntreLinkYSuEnemigo(){
     /*
-    Proposito: Indicar la distancia entre link y su enemigo.
-    Sabiendo que no hay obstacuos y que existe un enemigo en 
-    una direccion.
-    Precondicion: Debe existir un enemigo en una direccion y 
-    no debe haber ningun obstaculo entre ellos.
+    Proposito: Describir la distancia entre link y su enemigo.
+    Precondicion: Debe existir un enemigo en una direccion desde la celda actual y 
+    no debe haber ningun obstaculo entre ellos (Link y su Enemigo).
     Tipo: Numero
+    Observaciones: Se realiza un recorrido en las 4 direcciones para asi poder determinar 
+    en que direccion se encuentra el enemigo y asi poder determinar su distancia desde donde 
+    se encuentra ubicado Link
     */
-    distancia := 0
-    direccion := minDir()
-    while(direccion /= maxDir()){
-        if(hayEnemigosEnLaVisionDeLinkHacia_(direccion)){
-            distancia := distanciaHaciaEnemigoAl_(direccion)
-        }
-        direccion := siguiente(direccion)
+    distanciaAEnemigo:= 0
+    while (puedeMover( direcciónEnLaQueEstáElEnemigo()) && not hayEnemigosDeLink() ) {
+        Mover(direcciónEnLaQueEstáElEnemigo())
+        distanciaAEnemigo:= distanciaAEnemigo + 1
     }
-    if(hayEnemigosEnLaVisionDeLinkHacia_(direccion)){
-        distancia := distanciaHaciaEnemigoAl_(direccion)
-    }
-    return(distancia)
+    return (distanciaAEnemigo)
 } 
 
-function distanciaHaciaEnemigoAl_(direccion){
+function direcciónEnLaQueEstáElEnemigo() {
     /*
-    Proposito: indicar la distancia al enemigo
-    Precondicion: Debe existir un enemigo al "direccion"
-    y no puede haber ningun obstaculo en esa direccion
-    Tipo: Numero
-    Parametro: direccion: Direccion
+    PROPOSITO: indica la dirección en la que está el enemigo de Link.
+    PARAMETRO: ninguno
+    PRECONDICIÓN: hay un único enemigo visible en alguna de las 4 direcciones y el cabezal está sobre Link.
+    OBSERVACIONES: utiliza un recorrido de búsqueda sobre direcciones.
     */
-    contador := 0;
-    while(not hayBolitas(Rojo)){
-        Mover(direccion)
-        contador := contador + 1
-    } 
-    return(contador)
+    direcciónABuscar:= minDir()
+    while (not hayEnemigosEnLaVisionDeLinkHacia_(direcciónABuscar)) {
+        direcciónABuscar:= siguiente(direcciónABuscar)
+    }
+    return (direcciónABuscar)
 }
 
 function hayEnemigosEnLaVisionDeLinkHacia_(direccion){
@@ -132,6 +101,11 @@ procedure MatarEnemigoHacia_ConLaEspada(direccion){
 }
 
 procedure MoverLink_VecesAl_(cantidadAMover, direcciónAMover){
+    /*
+    Proposito: Mover Link "cantidadAMover" veces al "direccionAMover"
+    Precondicion: Debe existir "cantidadAMover" ubicaciones al "direccionAMover"
+    Parametros: cantidadAMover: Numero, direcciónAMover:Direccion
+    */
     repeat(cantidadAMover){
         MoverLinkHacia_(direcciónAMover)
     }
