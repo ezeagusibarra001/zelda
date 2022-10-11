@@ -1,0 +1,35 @@
+program{
+    return(
+        hayEnemigosEnLaVisionDeLinkHacia_(Norte)
+    )
+}
+
+function hayEnemigosEnLaVisionDeLinkHacia_(direccion){
+    /*
+    Proposito: indica si hay un enemigo en el campo de vision de 
+    link, no debe haber ningun obstaculo al "direccion" para que
+    pueda verlo.
+    Precondicion: el cabezal debe estar sobre link
+    Parametros: direccion: Direccion
+    Tipo: Booleano
+    Observaciones: Los enemigos se representan con bolitas Rojas
+    y los obstaculos con bolitas Azules
+    */
+    while(puedeMover(direccion)  && not hayObstaculo() && 
+        not hayEnemigosDeLink()){
+        
+        Mover(direccion)  
+    }
+    
+    return(
+        hayEnemigosDeLink()
+    )
+}
+
+function hayObstaculo(){
+    return (hayBolitas(Azul))
+}
+
+function hayEnemigosDeLink(){
+    return (hayBolitas(Rojo))
+}

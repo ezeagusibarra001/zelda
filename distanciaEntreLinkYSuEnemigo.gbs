@@ -1,0 +1,72 @@
+program{
+    return(
+        distanciaEntreLinkYSuEnemigo()
+    )
+}
+ 
+function distanciaEntreLinkYSuEnemigo(){
+    /*
+    Proposito: Indicar la distancia entre link y su enemigo.
+    Sabiendo que no hay obstacuos y que existe un enemigo en 
+    una direccion.
+    Precondicion: Debe existir un enemigo en una direccion y 
+    no debe haber ningun obstaculo entre ellos.
+    Tipo: Numero
+    */
+    distancia := 0
+    direccion := minDir()
+    while(direccion /= maxDir()){
+        if(hayEnemigosEnLaVisionDeLinkHacia_(direccion)){
+            distancia := distanciaHaciaEnemigoAl_(direccion)
+        }
+        direccion := siguiente(direccion)
+    }
+    if(hayEnemigosEnLaVisionDeLinkHacia_(direccion)){
+        distancia := distanciaHaciaEnemigoAl_(direccion)
+    }  
+    return(distancia)
+} 
+
+function distanciaHaciaEnemigoAl_(direccion){
+    /*
+    Proposito: indicar la distancia al enemigo
+    Precondicion: Debe existir un enemigo al "direccion"
+    y no puede haber ningun obstaculo en esa direccion
+    Tipo: Numero
+    Parametro: direccion: Direccion
+    */
+    contador := 0;
+    while(not hayBolitas(Rojo)){
+        Mover(direccion)
+        contador := contador + 1
+    } 
+    return(contador)
+}
+
+function hayEnemigosEnLaVisionDeLinkHacia_(direccion){
+    /*
+    Proposito: indica si hay un enemigo en el campo de vision de 
+    link, no debe haber ningun obstaculo al "direccion" para que
+    pueda verlo.
+    Precondicion: el cabezal debe estar sobre link
+    Parametros: direccion: Direccion
+    Tipo: Booleano
+    Observaciones: Los enemigos se representan con bolitas Rojas
+    y los obstaculos con bolitas Azules
+    */
+    while(puedeMover(direccion)  && not hayObstaculo() && 
+        not hayEnemigosDeLink()){
+        Mover(direccion)
+    }
+    return(
+        hayEnemigosDeLink()
+    ) 
+}
+
+function hayObstaculo(){
+    return (hayBolitas(Azul))
+}
+
+function hayEnemigosDeLink(){
+    return (hayBolitas(Rojo))
+}

@@ -1,0 +1,133 @@
+program{
+    EliminarEnemigoVisble()
+}
+
+procedure EliminarEnemigoVisble(){
+    /*
+    Proposito: Eliminar a un enemigo de link mientras el mismo se encuentre dentro del campo de 
+    vision de Link.
+    Precondicion: Debe existir un enemigo en una direccion y sin ningun obstaculo en el medio.
+    La distancia entre link y su enemigo debe ser mayor a 0
+    Parametros: -
+    Observaciones: Si el enemigo se encuentra a mas de 3 ubicaciones de distancia elimina al enemigo
+    con su arco, sino se mueve hasta donde el enemigo se encuentra y lo mata con su espada.
+    */
+    direccion := minDir()
+    if(distanciaEntreLinkYSuEnemigo() > 0){
+        while(direccion /= maxDir() && not hayEnemigosEnLaVisionDeLinkHacia_(direccion)){
+            direccion := siguiente(direccion)
+        }
+        EliminarEnemigoConArcoOConEspadaAl_(direccion)
+    }
+}
+ 
+procedure EliminarEnemigoConArcoOConEspadaAl_(direccion){
+    /*
+    Proposito: Eliminar el enemigo de link al "direccion" con arco o con espada
+    Parametros: direccion: Direccion
+    Precondicion: Debe existir un enemigo visible en la "direccion" dada
+    Observaciones: Si el enemigo se encuentra a mas de 3 ubicaciones de distancia
+    se lo elimina cona rco y sino con espada
+    */
+    distanciaAlEnemigo := distanciaEntreLinkYSuEnemigo()
+    if(distanciaAlEnemigo > 3){
+        MatarEnemigoHacia_ConElArco(direccion)
+        MoverLink_VecesAl_(distanciaAlEnemigo, opuesto(direccion))
+    }else{
+        MoverLink_VecesAl_(distanciaAlEnemigo - 1, direccion)
+        MatarEnemigoHacia_ConLaEspada(direccion)
+        MoverLink_VecesAl_(distanciaAlEnemigo - 1, opuesto(direccion))
+    } 
+}
+
+function distanciaEntreLinkYSuEnemigo(){
+    /*
+    Proposito: Indicar la distancia entre link y su enemigo.
+    Sabiendo que no hay obstacuos y que existe un enemigo en 
+    una direccion.
+    Precondicion: Debe existir un enemigo en una direccion y 
+    no debe haber ningun obstaculo entre ellos.
+    Tipo: Numero
+    */
+    distancia := 0
+    direccion := minDir()
+    while(direccion /= maxDir()){
+        if(hayEnemigosEnLaVisionDeLinkHacia_(direccion)){
+            distancia := distanciaHaciaEnemigoAl_(direccion)
+        }
+        direccion := siguiente(direccion)
+    }
+    if(hayEnemigosEnLaVisionDeLinkHacia_(direccion)){
+        distancia := distanciaHaciaEnemigoAl_(direccion)
+    }
+    return(distancia)
+} 
+
+function distanciaHaciaEnemigoAl_(direccion){
+    /*
+    Proposito: indicar la distancia al enemigo
+    Precondicion: Debe existir un enemigo al "direccion"
+    y no puede haber ningun obstaculo en esa direccion
+    Tipo: Numero
+    Parametro: direccion: Direccion
+    */
+    contador := 0;
+    while(not hayBolitas(Rojo)){
+        Mover(direccion)
+        contador := contador + 1
+    } 
+    return(contador)
+}
+
+function hayEnemigosEnLaVisionDeLinkHacia_(direccion){
+    /*
+    Proposito: indica si hay un enemigo en el campo de vision de 
+    link, no debe haber ningun obstaculo al "direccion" para que
+    pueda verlo.
+    Precondicion: el cabezal debe estar sobre link
+    Parametros: direccion: Direccion
+    Tipo: Booleano
+    Observaciones: Los enemigos se representan con bolitas Rojas
+    y los obstaculos con bolitas Azules
+    */
+    while(puedeMover(direccion)  && not hayObstaculo() && 
+        not hayEnemigosDeLink()){
+        Mover(direccion)
+    }
+    return(
+        hayEnemigosDeLink()
+    ) 
+}
+
+function hayObstaculo(){
+    return (hayBolitas(Azul))
+}
+
+function hayEnemigosDeLink(){
+    return (hayBolitas(Rojo))
+}
+
+procedure MatarEnemigoHacia_ConElArco(direccion){
+    MoverLink_VecesAl_(distanciaEntreLinkYSuEnemigo(), direccion)
+    Sacar(Rojo)
+}
+
+procedure MatarEnemigoHacia_ConLaEspada(direccion){
+    Mover(direccion)
+    Sacar(Rojo)
+    Mover(opuesto(direccion))
+}
+
+procedure MoverLink_VecesAl_(cantidadAMover, direcciónAMover){
+    repeat(cantidadAMover){
+        MoverLinkHacia_(direcciónAMover)
+    }
+}
+
+procedure MoverLinkHacia_(dir){
+    Mover(dir)
+}
+
+
+
+
