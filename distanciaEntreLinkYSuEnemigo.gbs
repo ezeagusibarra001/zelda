@@ -6,12 +6,13 @@ program{
  
 function distanciaEntreLinkYSuEnemigo(){
     /*
-    Proposito: Indicar la distancia entre link y su enemigo.
-    Sabiendo que no hay obstacuos y que existe un enemigo en 
-    una direccion.
-    Precondicion: Debe existir un enemigo en una direccion y 
-    no debe haber ningun obstaculo entre ellos.
+    Proposito: Describir la distancia entre link y su enemigo.
+    Precondicion: Debe existir un enemigo en una direccion desde la celda actual y 
+    no debe haber ningun obstaculo entre ellos (Link y su Enemigo).
     Tipo: Numero
+    Observaciones: Se realiza un recorrido en las 4 direcciones para asi poder determinar 
+    en que direccion se encuentra el enemigo y asi poder determinar su distancia desde donde 
+    se encuentra ubicado Link
     */
     distancia := 0
     direccion := minDir()
@@ -29,18 +30,18 @@ function distanciaEntreLinkYSuEnemigo(){
 
 function distanciaHaciaEnemigoAl_(direccion){
     /*
-    Proposito: indicar la distancia al enemigo
+    Proposito: Describir la distancia al enemigo
     Precondicion: Debe existir un enemigo al "direccion"
     y no puede haber ningun obstaculo en esa direccion
     Tipo: Numero
     Parametro: direccion: Direccion
     */
-    contador := 0;
-    while(not hayBolitas(Rojo)){
+    distanciaEntreLinkYSuEnemigo := 0;
+    while(not hayEnemigosDeLink()){
         Mover(direccion)
-        contador := contador + 1
+        distanciaEntreLinkYSuEnemigo := distanciaEntreLinkYSuEnemigo + 1
     } 
-    return(contador)
+    return(distanciaEntreLinkYSuEnemigo)
 }
 
 function hayEnemigosEnLaVisionDeLinkHacia_(direccion){
