@@ -14,34 +14,26 @@ function distanciaEntreLinkYSuEnemigo(){
     en que direccion se encuentra el enemigo y asi poder determinar su distancia desde donde 
     se encuentra ubicado Link
     */
-    distancia := 0
-    direccion := minDir()
-    while(direccion /= maxDir()){
-        if(hayEnemigosEnLaVisionDeLinkHacia_(direccion)){
-            distancia := distanciaHaciaEnemigoAl_(direccion)
-        }
-        direccion := siguiente(direccion)
+    distanciaAEnemigo:= 0
+    while (puedeMover( direcciónEnLaQueEstáElEnemigo() && not hayEnemigo() ) {
+        Mover(direcciónEnLaQueEstáElEnemigo())
+        distanciaAEnemigo:= distanciaAEnemigo + 1
     }
-    if(hayEnemigosEnLaVisionDeLinkHacia_(direccion)){
-        distancia := distanciaHaciaEnemigoAl_(direccion)
-    }  
-    return(distancia)
+    return (distanciaAEnemigo)
 } 
 
-function distanciaHaciaEnemigoAl_(direccion){
+function direcciónEnLaQueEstáElEnemigo() {
     /*
-    Proposito: Describir la distancia al enemigo
-    Precondicion: Debe existir un enemigo al "direccion"
-    y no puede haber ningun obstaculo en esa direccion
-    Tipo: Numero
-    Parametro: direccion: Direccion
+    PROPOSITO: indica la dirección en la que está el enemigo de Link.
+    PARAMETRO: ninguno
+    PRECONDICIÓN: hay un único enemigo visible en alguna de las 4 direcciones y el cabezal está sobre Link.
+    OBSERVACIONES: utiliza un recorrido de búsqueda sobre direcciones.
     */
-    distanciaEntreLinkYSuEnemigo := 0;
-    while(not hayEnemigosDeLink()){
-        Mover(direccion)
-        distanciaEntreLinkYSuEnemigo := distanciaEntreLinkYSuEnemigo + 1
-    } 
-    return(distanciaEntreLinkYSuEnemigo)
+    direcciónABuscar:= minDir()
+    while (not hayEnemigoEnlaVistaHacia_(direcciónABuscar)) {
+        direcciónABuscar:= siguiente(direcciónABuscar)
+    }
+    return (direcciónABuscar)
 }
 
 function hayEnemigosEnLaVisionDeLinkHacia_(direccion){
