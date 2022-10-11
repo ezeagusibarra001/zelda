@@ -20,6 +20,19 @@ procedure EliminarEnemigoVisble(){
         EliminarEnemigoConArcoOConEspadaAl_(direccion)
     }
 }
+
+procedure EliminarEnemigoVisible() {
+    /*
+    PROPOSITO: hace que Link mate a un enemigo q se encuentra en alguna ubicación visible...
+    PRECONDICIÓN: el cabezal está sobre Link y hay un único enemigo visible.
+    PARAMETROS: ninguno
+    */
+    if (distanciaEntreLInkYSuEnemigo() >3) {
+        MataEnemigoHacia_ConArco(direcciónEnLaQueEstáEnemigo() )
+    } else {
+        IrYMatarEnemigoHacia_ConEspada(direcciónEnLaQueEstáEnemigo() )
+    }
+}
  
 procedure EliminarEnemigoConArcoOConEspadaAl_(direccion){
     /*

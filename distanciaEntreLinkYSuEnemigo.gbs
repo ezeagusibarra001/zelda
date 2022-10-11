@@ -15,7 +15,7 @@ function distanciaEntreLinkYSuEnemigo(){
     se encuentra ubicado Link
     */
     distanciaAEnemigo:= 0
-    while (puedeMover( direcciónEnLaQueEstáElEnemigo() && not hayEnemigo() ) {
+    while (puedeMover( direcciónEnLaQueEstáElEnemigo()) && not hayEnemigosDeLink() ) {
         Mover(direcciónEnLaQueEstáElEnemigo())
         distanciaAEnemigo:= distanciaAEnemigo + 1
     }
@@ -30,7 +30,7 @@ function direcciónEnLaQueEstáElEnemigo() {
     OBSERVACIONES: utiliza un recorrido de búsqueda sobre direcciones.
     */
     direcciónABuscar:= minDir()
-    while (not hayEnemigoEnlaVistaHacia_(direcciónABuscar)) {
+    while (not hayEnemigosEnLaVisionDeLinkHacia_(direcciónABuscar)) {
         direcciónABuscar:= siguiente(direcciónABuscar)
     }
     return (direcciónABuscar)
